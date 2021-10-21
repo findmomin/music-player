@@ -1,5 +1,5 @@
-"use strict";
-const elements = {
+// dom elements
+var elements = {
     musicContainer: document.getElementById('music-container'),
     playBtn: document.getElementById('play'),
     prevBtn: document.getElementById('prev'),
@@ -8,11 +8,12 @@ const elements = {
     progress: document.getElementById('progress'),
     progressContainer: document.getElementById('progress-container'),
     title: document.getElementById('title'),
-    cover: document.getElementById('cover'),
+    cover: document.getElementById('cover')
 };
-let nowPlaying = 'ukulele';
-const songs = ['summer', 'ukulele', 'hey'];
-const play = () => {
+var nowPlaying = 'ukulele';
+var songs = ['summer', 'ukulele', 'hey'];
+// functions
+var play = function () {
     elements.audio.play();
     elements.musicContainer.classList.add('play');
     if (document.querySelector('.fa-play')) {
@@ -21,7 +22,7 @@ const play = () => {
             .classList.replace('fa-play', 'fa-pause');
     }
 };
-const pause = () => {
+var pause = function () {
     elements.audio.pause();
     elements.musicContainer.classList.remove('play');
     if (document.querySelector('.fa-pause')) {
@@ -30,11 +31,11 @@ const pause = () => {
             .classList.replace('fa-pause', 'fa-play');
     }
 };
-const displaySongInfo = () => {
-    elements.cover.src = `images/${nowPlaying}.jpg`;
-    elements.title.textContent = `${nowPlaying.toUpperCase()}`;
+var displaySongInfo = function () {
+    elements.cover.src = "images/" + nowPlaying + ".jpg";
+    elements.title.textContent = "" + nowPlaying.toUpperCase();
 };
-const togglePlayback = () => {
+var togglePlayback = function () {
     displaySongInfo();
     if (elements.audio.paused) {
         play();
@@ -43,41 +44,48 @@ const togglePlayback = () => {
         pause();
     }
 };
-const previousSong = () => {
+var previousSong = function () {
     if (!elements.audio.paused)
         pause();
     if (songs.indexOf(nowPlaying) === 0)
         nowPlaying = songs[songs.length - 1];
     else
         nowPlaying = songs[songs.indexOf(nowPlaying) - 1];
-    elements.audio.src = `music/${nowPlaying}.mp3`;
+    elements.audio.src = "music/" + nowPlaying + ".mp3";
     displaySongInfo();
     play();
 };
-const nextSong = () => {
+var nextSong = function () {
     if (!elements.audio.paused)
         pause();
     if (songs.indexOf(nowPlaying) === songs.length - 1)
         nowPlaying = songs[0];
     else
         nowPlaying = songs[songs.indexOf(nowPlaying) + 1];
-    elements.audio.src = `music/${nowPlaying}.mp3`;
+    elements.audio.src = "music/" + nowPlaying + ".mp3";
     displaySongInfo();
     play();
 };
-const progressSong = () => {
-    elements.progress.style.width = `${(100 * elements.audio.currentTime) / elements.audio.duration}%`;
+var progressSong = function () {
+    elements.progress.style.width = (100 * elements.audio.currentTime) / elements.audio.duration + "%";
 };
-const skipTime = (time) => {
+var skipTime = function (time) {
     elements.audio.currentTime = time;
 };
+// event handlers
+// play
 elements.playBtn.addEventListener('click', togglePlayback);
+// previous
 elements.prevBtn.addEventListener('click', previousSong);
+// next
 elements.nextBtn.addEventListener('click', nextSong);
-elements.progressContainer.addEventListener('click', e => {
-    const time = (e.offsetX * elements.audio.duration) /
+// skip
+elements.progressContainer.addEventListener('click', function (e) {
+    var time = (e.offsetX * elements.audio.duration) /
         elements.progressContainer.offsetWidth;
     skipTime(time);
 });
+// progress through
 elements.audio.addEventListener('timeupdate', progressSong);
+// ended
 elements.audio.addEventListener('ended', nextSong);
